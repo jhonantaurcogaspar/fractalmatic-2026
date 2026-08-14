@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FractalMatic 2026 — 1° Concurso Nacional de Matemática</title>
+<meta name="description" content="FractalMatic 2026, 1° Concurso Nacional de Matemática. Colegio y Academia Fractal, Mala, Cañete. S/5,000 en premios para colegios públicos y privados. Bases, temario e inscripciones.">
+<link rel="icon" href="assets/logo.jpg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,800;0,900;1,700&family=Poppins:wght@600;700;800&family=Inter:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy: #16215C;
+    --navy-dark: #0B1338;
+    --sky: #2D6FE0;
+    --teal: #16BFC0;
+    --gold: #F5B301;
+    --coral: #EF5350;
+    --magenta: #EC1E79;
+    --green: #2FA84F;
+    --cloud: #F7F9FC;
+    --ink: #14213D;
+    --ink-soft: #4A5578;
+    --line: #E4E8F2;
+    --radius: 18px;
+    --max: 1120px;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    font-family:'Inter',sans-serif;
+    color:var(--ink);
+    background:var(--cloud);
+    -webkit-font-smoothing:antialiased;
+  }
+  h1,h2,h3,.display{font-family:'Poppins',sans-serif;}
+  .mono{font-family:'Space Mono',monospace;}
+  a{color:inherit;}
+  img{max-width:100%;display:block;}
+  .wrap{max-width:var(--max);margin:0 auto;padding:0 24px;}
+  .eyebrow{
+    font-family:'Space Mono',monospace;
+    text-transform:uppercase;
+    letter-spacing:.14em;
+    font-size:.72rem;
+    font-weight:700;
+  }
+  /* dot cluster signature element */
+  .dots{position:relative;width:1em;height:1em;display:inline-block;}
+  .dot-cluster{display:inline-flex;align-items:center;gap:6px;}
+  .dot{border-radius:50%;display:inline-block;}
+  .divider-dots{display:flex;justify-content:center;gap:10px;margin:0 auto 28px;}
+  .divider-dots span{width:9px;height:9px;border-radius:50%;}
+  .divider-dots span:nth-child(1){background:var(--gold);}
+  .divider-dots span:nth-child(2){background:var(--coral);}
+  .divider-dots span:nth-child(3){background:var(--magenta);}
+  .divider-dots span:nth-child(4){background:var(--teal);}
+  .divider-dots span:nth-child(5){background:var(--sky);}
+
+  /* header */
+  header{
+    position:sticky;top:0;z-index:50;
+    background:rgba(255,255,255,.92);
+    backdrop-filter:blur(8px);
+    border-bottom:1px solid var(--line);
+  }
+  .nav{display:flex;align-items:center;justify-content:space-between;padding:14px 24px;max-width:var(--max);margin:0 auto;}
+  .brand{display:flex;align-items:center;gap:10px;text-decoration:none;}
+  .brand img{height:42px;width:auto;}
+  .brand-text{font-family:'Playfair Display',serif;font-size:1.15rem;font-weight:700;color:var(--navy);}
+  .brand-text b{color:var(--gold);-webkit-text-stroke:0;font-weight:800;}
+  footer .brand-text{color:#fff;}
+  .navlinks{display:flex;gap:28px;list-style:none;margin:0;padding:0;}
+  .navlinks a{
+    text-decoration:none;color:var(--navy);font-weight:600;font-size:.94rem;
+    position:relative;padding:6px 0;
+  }
+  .navlinks a::after{
+    content:'';position:absolute;left:0;bottom:-2px;width:0;height:2px;background:var(--gold);
+    transition:width .25s ease;
+  }
+  .navlinks a:hover::after{width:100%;}
+  .navtoggle{display:none;background:none;border:none;cursor:pointer;padding:6px;}
+  .navtoggle span{display:block;width:24px;height:2px;background:var(--navy);margin:5px 0;border-radius:2px;}
+
+  /* hero */
+  .hero{
+    position:relative;overflow:hidden;
+    background:radial-gradient(1200px 600px at 15% -10%, #24338C 0%, var(--navy) 45%, var(--navy-dark) 100%);
+    color:#fff;padding:88px 24px 110px;
+  }
+  .hero-inner{max-width:var(--max);margin:0 auto;position:relative;z-index:2;text-align:center;}
+  .hero .eyebrow{color:var(--gold);margin-bottom:18px;display:inline-block;}
+  .hero h1{
+    font-size:clamp(2rem, 5vw, 3.4rem);
+    line-height:1.1;font-weight:800;margin:0 0 18px;
+    letter-spacing:-.01em;
+  }
+  .hero h1 .accent{color:var(--gold);}
+  .hero p.lead{
+    font-size:1.15rem;color:#C9D3F5;max-width:640px;margin:0 auto 34px;font-weight:400;
+  }
+  .hero-ctas{display:flex;gap:16px;justify-content:center;flex-wrap:wrap;}
+  .btn{
+    display:inline-flex;align-items:center;gap:8px;
+    padding:14px 28px;border-radius:100px;font-weight:700;font-size:.96rem;
+    text-decoration:none;border:2px solid transparent;cursor:pointer;
+    transition:transform .18s ease, box-shadow .18s ease, background .18s ease;
+    font-family:'Inter',sans-serif;
+  }
+  .btn:hover{transform:translateY(-2px);}
+  .btn-gold{background:var(--gold);color:var(--navy-dark);box-shadow:0 8px 24px rgba(245,179,1,.35);}
+  .btn-gold:hover{box-shadow:0 12px 28px rgba(245,179,1,.45);}
+  .btn-outline{background:transparent;border-color:rgba(255,255,255,.4);color:#fff;}
+  .btn-outline:hover{background:rgba(255,255,255,.1);}
+  .btn-navy{background:var(--navy);color:#fff;}
+  .btn-navy:hover{box-shadow:0 10px 24px rgba(22,33,92,.3);}
+  .btn-green{background:var(--green);color:#fff;box-shadow:0 8px 24px rgba(47,168,79,.35);}
+  .btn-green:hover{box-shadow:0 12px 28px rgba(47,168,79,.45);}
+
+  /* hero wordmark */
+  .wordmark{font-family:'Playfair Display',serif;line-height:1;margin:0 0 6px;}
+  .wordmark .w-top{
+    display:block;font-size:clamp(.85rem,1.6vw,1.05rem);font-weight:700;letter-spacing:.06em;
+    color:#C9D3F5;text-transform:uppercase;margin-bottom:14px;font-family:'Poppins',sans-serif;
+  }
+  .wordmark .w-main{
+    display:block;font-size:clamp(2.6rem,7.5vw,5rem);font-weight:800;letter-spacing:-.01em;
+  }
+  .wordmark .w-main .w-fractal{color:#fff;}
+  .wordmark .w-main .w-matic{
+    background:linear-gradient(100deg,#F5B301 10%,#D97F1F 60%,#C96A16 100%);
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+  }
+  .wordmark .w-year{
+    display:flex;align-items:center;justify-content:center;gap:16px;
+    font-size:clamp(1.6rem,4vw,2.4rem);font-weight:700;color:#fff;margin-top:6px;
+  }
+  .wordmark .w-year .rule{width:64px;height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent);}
+  .info-bar{
+    display:flex;flex-wrap:wrap;justify-content:center;gap:14px;margin:36px auto 34px;
+  }
+  .info-pill{
+    display:flex;align-items:center;gap:10px;background:rgba(255,255,255,.08);
+    border:1px solid rgba(255,255,255,.16);border-radius:100px;padding:10px 20px 10px 14px;
+  }
+  .info-pill .ico{
+    width:30px;height:30px;border-radius:50%;flex:none;
+    display:flex;align-items:center;justify-content:center;
+  }
+  .info-pill .txt{text-align:left;line-height:1.15;}
+  .info-pill .txt b{display:block;font-size:.95rem;color:#fff;}
+  .info-pill .txt span{display:block;font-size:.72rem;color:#B7C0E8;}
+
+  /* floating dot cluster deco */
+  .orbit{position:absolute;border-radius:50%;opacity:.85;filter:blur(.3px);}
+  .hero .orbit{animation:float 7s ease-in-out infinite;}
+  @keyframes float{0%,100%{transform:translateY(0);}50%{transform:translateY(-14px);}}
+  @media (prefers-reduced-motion:reduce){
+    .orbit{animation:none;}
+  }
+
+  section{padding:84px 24px;}
+  .section-head{text-align:center;max-width:640px;margin:0 auto 48px;}
+  .section-head .eyebrow{color:var(--sky);}
+  .section-head h2{font-size:clamp(1.6rem,3.4vw,2.3rem);margin:10px 0 12px;color:var(--navy);}
+  .section-head p{color:var(--ink-soft);font-size:1.02rem;margin:0;}
+
+  .card{
+    background:#fff;border:1px solid var(--line);border-radius:var(--radius);
+    padding:34px;box-shadow:0 1px 2px rgba(20,33,61,.04);
+  }
+
+  /* bases / temario */
+  .doc-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;max-width:var(--max);margin:0 auto;}
+  .doc-card{display:flex;align-items:flex-start;gap:18px;}
+  .doc-icon{
+    flex:none;width:52px;height:52px;border-radius:14px;
+    display:flex;align-items:center;justify-content:center;font-weight:800;color:#fff;font-family:'Space Mono',monospace;font-size:.8rem;
+  }
+  .doc-icon.pdf{background:var(--coral);}
+  .doc-card h3{margin:0 0 6px;font-size:1.15rem;color:var(--navy);}
+  .doc-card p{margin:0 0 14px;color:var(--ink-soft);font-size:.94rem;}
+  .doc-card .btn{padding:10px 20px;font-size:.86rem;}
+
+  /* examenes */
+  .exam-tabs{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-bottom:36px;}
+  .exam-tab{
+    padding:10px 20px;border-radius:100px;border:1.5px solid var(--line);background:#fff;
+    font-weight:600;font-size:.88rem;cursor:pointer;color:var(--ink-soft);
+    transition:all .18s ease;
+  }
+  .exam-tab.active{background:var(--navy);border-color:var(--navy);color:#fff;}
+  .exam-panel{display:none;}
+  .exam-panel.active{display:block;}
+  .exam-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:14px;}
+  .exam-item{
+    background:#fff;border:1px solid var(--line);border-radius:12px;padding:18px;
+    text-align:center;text-decoration:none;color:var(--navy);font-weight:600;font-size:.92rem;
+    transition:border-color .18s ease, transform .18s ease;
+  }
+  .exam-item:hover{border-color:var(--teal);transform:translateY(-2px);}
+  .empty-state{
+    text-align:center;padding:48px 24px;border:1.5px dashed var(--line);border-radius:var(--radius);
+    color:var(--ink-soft);
+  }
+  .empty-state strong{color:var(--navy);display:block;margin-bottom:6px;font-family:'Poppins',sans-serif;}
+
+  /* tutoriales */
+  .video-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;max-width:var(--max);margin:0 auto;}
+  .video-card h3{color:var(--navy);margin:0 0 14px;font-size:1.1rem;}
+  .video-frame{
+    position:relative;padding-top:56.25%;border-radius:var(--radius);overflow:hidden;
+    background:var(--navy);border:1px solid var(--line);
+  }
+  .video-frame iframe{position:absolute;inset:0;width:100%;height:100%;border:0;}
+
+  /* inscripciones */
+  .insc-section{background:var(--navy);color:#fff;}
+  .insc-section .section-head p{color:#B7C0E8;}
+  .insc-section .eyebrow{color:var(--teal);}
+  .insc-section .section-head h2{color:#fff;}
+  .insc-options{display:grid;grid-template-columns:1fr 1fr;gap:24px;max-width:var(--max);margin:0 auto 12px;}
+  .insc-card{
+    background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.14);border-radius:var(--radius);
+    padding:32px;text-align:center;
+  }
+  .insc-card h3{margin:0 0 10px;font-size:1.2rem;}
+  .insc-card p{color:#B7C0E8;margin:0 0 20px;font-size:.94rem;}
+  .form-wrap{
+    max-width:640px;margin:36px auto 0;background:#fff;color:var(--ink);
+    border-radius:var(--radius);padding:36px;display:none;
+  }
+  .form-wrap.active{display:block;}
+  .form-wrap h3{color:var(--navy);margin:0 0 22px;font-size:1.25rem;}
+  .field{margin-bottom:18px;}
+  .field label{display:block;font-weight:600;font-size:.88rem;margin-bottom:6px;color:var(--navy);}
+  .field input, .field select{
+    width:100%;padding:12px 14px;border-radius:10px;border:1.5px solid var(--line);
+    font-family:'Inter',sans-serif;font-size:.94rem;background:var(--cloud);
+  }
+  .field input:focus, .field select:focus{outline:2px solid var(--teal);outline-offset:1px;border-color:var(--teal);}
+  .field-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+  .form-note{
+    font-size:.82rem;color:var(--ink-soft);background:var(--cloud);border-radius:10px;padding:12px 14px;margin-bottom:20px;
+  }
+  .form-msg{display:none;margin-top:16px;padding:12px 14px;border-radius:10px;font-size:.9rem;font-weight:600;}
+  .form-msg.ok{display:block;background:#E3FBEF;color:#0B7A45;}
+  .form-msg.err{display:block;background:#FDECEC;color:#B42318;}
+
+  footer{background:var(--navy-dark);color:#8C97C4;padding:44px 24px;text-align:center;font-size:.86rem;}
+  footer .brand{justify-content:center;margin-bottom:14px;}
+  footer .brand img{filter:grayscale(0);border-radius:8px;background:#fff;padding:3px;}
+  footer p{margin:4px 0;}
+  .social-row{display:flex;justify-content:center;gap:10px;margin-top:18px;}
+  .social-ico{
+    width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+    background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.14);color:#B7C0E8;
+    transition:background .18s ease, color .18s ease;
+  }
+  .social-ico:hover{background:var(--gold);color:var(--navy-dark);}
+
+  @media (max-width:820px){
+    .navlinks{
+      position:fixed;top:70px;left:0;right:0;background:#fff;flex-direction:column;
+      padding:20px 24px;gap:0;border-bottom:1px solid var(--line);
+      transform:translateY(-130%);transition:transform .25s ease;
+    }
+    .navlinks.open{transform:translateY(0);}
+    .navlinks a{display:block;padding:12px 0;border-bottom:1px solid var(--line);}
+    .navtoggle{display:block;}
+    .doc-grid,.video-grid,.insc-options{grid-template-columns:1fr;}
+    .field-row{grid-template-columns:1fr;}
+    section{padding:60px 20px;}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <nav class="nav">
+    <a href="#inicio" class="brand"><img src="assets/logo.jpg" alt="Fractal Colegio y Academia"><span class="brand-text">Fractal<b>Matic</b></span></a>
+    <ul class="navlinks" id="navlinks">
+      <li><a href="#inicio">Inicio</a></li>
+      <li><a href="#bases">Bases</a></li>
+      <li><a href="#temario">Temario</a></li>
+      <li><a href="#examenes">Exámenes</a></li>
+      <li><a href="#tutoriales">Tutorial</a></li>
+      <li><a href="#inscripciones">Inscripciones</a></li>
+    </ul>
+    <button class="navtoggle" id="navtoggle" aria-label="Abrir menú"><span></span><span></span><span></span></button>
+  </nav>
+</header>
+
+<section class="hero" id="inicio">
+  <span class="orbit" style="width:70px;height:70px;background:var(--gold);top:10%;left:8%;"></span>
+  <span class="orbit" style="width:36px;height:36px;background:var(--coral);top:60%;left:4%;animation-delay:.6s;"></span>
+  <span class="orbit" style="width:26px;height:26px;background:var(--teal);top:22%;left:20%;animation-delay:1.1s;"></span>
+  <span class="orbit" style="width:54px;height:54px;background:var(--magenta);top:72%;right:10%;animation-delay:.3s;"></span>
+  <span class="orbit" style="width:30px;height:30px;background:var(--sky);top:12%;right:16%;animation-delay:.9s;"></span>
+  <span class="orbit" style="width:18px;height:18px;background:var(--gold);top:40%;right:6%;animation-delay:1.4s;"></span>
+  <div class="hero-inner">
+    <p class="wordmark">
+      <span class="w-top">Colegio y Academia Fractal presenta</span>
+      <span class="w-main"><span class="w-fractal">FRACTAL</span><span class="w-matic">MATIC</span></span>
+      <span class="w-year"><span class="rule"></span>2026<span class="rule"></span></span>
+    </p>
+    <p class="lead">1° Concurso Nacional de Matemática, para colegios públicos y privados de todo el país.</p>
+
+    <div class="info-bar">
+      <div class="info-pill">
+        <span class="ico" style="background:var(--gold);">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><rect x="3" y="5" width="18" height="16" rx="2" stroke="#16215C" stroke-width="2"/><path d="M3 10H21" stroke="#16215C" stroke-width="2"/><path d="M8 3V7" stroke="#16215C" stroke-width="2" stroke-linecap="round"/><path d="M16 3V7" stroke="#16215C" stroke-width="2" stroke-linecap="round"/></svg>
+        </span>
+        <span class="txt"><span>Fecha del examen</span><b>22 de agosto</b></span>
+      </div>
+      <div class="info-pill">
+        <span class="ico" style="background:var(--gold);">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M8 21H16" stroke="#16215C" stroke-width="2" stroke-linecap="round"/><path d="M12 17V21" stroke="#16215C" stroke-width="2"/><path d="M6 4H18V9C18 12.3137 15.3137 15 12 15C8.68629 15 6 12.3137 6 9V4Z" stroke="#16215C" stroke-width="2"/><path d="M6 6H4C4 8.5 5 10 6 10.5" stroke="#16215C" stroke-width="2" stroke-linecap="round"/><path d="M18 6H20C20 8.5 19 10 18 10.5" stroke="#16215C" stroke-width="2" stroke-linecap="round"/></svg>
+        </span>
+        <span class="txt"><span>Premios</span><b>S/ 5,000</b></span>
+      </div>
+      <div class="info-pill">
+        <span class="ico" style="background:var(--gold);">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M12 3L2 8L12 13L22 8L12 3Z" stroke="#16215C" stroke-width="2" stroke-linejoin="round"/><path d="M6 10.5V16C6 16 8.5 18.5 12 18.5C15.5 18.5 18 16 18 16V10.5" stroke="#16215C" stroke-width="2" stroke-linejoin="round"/></svg>
+        </span>
+        <span class="txt"><span>Niveles</span><b>Primaria y Secundaria</b></span>
+      </div>
+    </div>
+
+    <div class="hero-ctas">
+      <a href="#inscripciones" class="btn btn-green">✏️ ¡Inscribe a tu colegio!</a>
+      <a href="#bases" class="btn btn-outline">Ver bases del concurso</a>
+    </div>
+    <p style="margin:26px 0 0;color:#8593C4;font-family:'Space Mono',monospace;font-size:.82rem;letter-spacing:.06em;">#FractalMatic2026</p>
+  </div>
+</section>
+
+<section id="bases">
+  <div class="section-head">
+    <span class="eyebrow">Documentos oficiales</span>
+    <h2>Bases y temario</h2>
+    <p>Toda la información oficial de FractalMatic 2026, lista para descargar.</p>
+  </div>
+  <div class="doc-grid">
+    <div class="card doc-card">
+      <div class="doc-icon pdf">PDF</div>
+      <div>
+        <h3>Bases del concurso</h3>
+        <p>Reglamento, fecha del examen (22 de agosto), premios y condiciones de inscripción.</p>
+        <a href="bases/BASES_FRACTALMATIC_2026.pdf" class="btn btn-navy" id="temario-anchor-fix">Descargar bases</a>
+      </div>
+    </div>
+    <div class="card doc-card" id="temario">
+      <div class="doc-icon pdf" style="background:var(--teal);">PDF</div>
+      <div>
+        <h3>Temario oficial</h3>
+        <p>Contenidos y capacidades evaluadas por cada nivel y grado.</p>
+        <a href="bases/TEMARIO_FRACTALMATIC_2026.pdf" class="btn btn-navy">Descargar temario</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="examenes" style="background:#fff;">
+  <div class="section-head">
+    <span class="eyebrow">Material de práctica</span>
+    <h2>Exámenes de años anteriores</h2>
+    <p>Se irán publicando aquí después de cada edición, organizados por nivel y grado.</p>
+  </div>
+  <div class="wrap">
+    <div class="exam-tabs">
+      <button class="exam-tab active" data-tab="primaria">Primaria</button>
+      <button class="exam-tab" data-tab="secundaria">Secundaria</button>
+    </div>
+
+    <div class="exam-panel active" data-panel="primaria">
+      <div class="empty-state">
+        <strong>Aún no hay exámenes publicados</strong>
+        Los exámenes de 1° a 6° de Primaria estarán disponibles aquí después de FractalMatic 2026.
+      </div>
+    </div>
+    <div class="exam-panel" data-panel="secundaria">
+      <div class="empty-state">
+        <strong>Aún no hay exámenes publicados</strong>
+        Los exámenes de 1° a 5° de Secundaria estarán disponibles aquí después de FractalMatic 2026.
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="tutoriales">
+  <div class="section-head">
+    <span class="eyebrow">Paso a paso</span>
+    <h2>Tutorial de inscripción</h2>
+    <p>Videos explicando cómo inscribirse a FractalMatic 2026, según seas delegación de un colegio o alumno libre.</p>
+  </div>
+  <div class="video-grid">
+    <div class="video-card">
+      <h3>Delegaciones — Colegios</h3>
+      <div class="video-frame">
+        <iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ" title="Tutorial inscripción delegaciones" allowfullscreen></iframe>
+      </div>
+    </div>
+    <div class="video-card">
+      <h3>Alumnos libres</h3>
+      <div class="video-frame">
+        <iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ" title="Tutorial inscripción alumno libre" allowfullscreen></iframe>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="insc-section" id="inscripciones">
+  <div class="section-head">
+    <span class="eyebrow">Último paso</span>
+    <h2>Inscripciones</h2>
+    <p>S/ 5,000 en premios para colegios públicos y privados. Elige la opción que corresponda para completar tu inscripción.</p>
+  </div>
+  <div class="insc-options">
+    <div class="insc-card">
+      <h3>Delegación de colegio</h3>
+      <p>Para instituciones estatales o particulares que inscriben a un grupo de estudiantes.</p>
+      <button class="btn btn-green" onclick="showForm('delegacion')">✏️ Inscribe a tu colegio</button>
+    </div>
+    <div class="insc-card">
+      <h3>Alumno libre</h3>
+      <p>Para estudiantes de cualquier institución que se inscriben de forma individual.</p>
+      <button class="btn btn-green" onclick="showForm('libre')">✏️ Inscribir alumno</button>
+    </div>
+  </div>
+
+  <div class="form-wrap" id="form-delegacion">
+    <h3>Inscripción — Delegación de colegio</h3>
+    <div class="form-note">Usa el código modular y contraseña entregados por la organización. Si aún no los tienes, escríbenos a direccion@fractal.edu.pe.</div>
+    <form id="delegacionForm" data-form-name="Delegación IE">
+      <div class="field"><label for="cod">Código modular</label><input type="text" id="cod" name="Código modular" required></div>
+      <div class="field"><label for="pass">Contraseña</label><input type="password" id="pass" name="Contraseña" required></div>
+      <button type="submit" class="btn btn-navy" style="width:100%;justify-content:center;">Ingresar</button>
+      <div class="form-msg" id="msg-delegacion"></div>
+    </form>
+  </div>
+
+  <div class="form-wrap" id="form-libre">
+    <h3>Inscripción — Alumno libre</h3>
+    <div class="form-note">Este formulario envía tus datos directamente a la organización de la olimpiada.</div>
+    <form id="libreForm" data-form-name="Alumno libre">
+      <div class="field-row">
+        <div class="field"><label for="dni">DNI / CE</label><input type="text" id="dni" name="DNI/CE" required></div>
+        <div class="field"><label for="cel">Celular</label><input type="tel" id="cel" name="Celular" required></div>
+      </div>
+      <div class="field-row">
+        <div class="field"><label for="nombre">Nombre</label><input type="text" id="nombre" name="Nombre" required></div>
+        <div class="field"><label for="apP">Apellido paterno</label><input type="text" id="apP" name="Apellido paterno" required></div>
+      </div>
+      <div class="field-row">
+        <div class="field"><label for="apM">Apellido materno</label><input type="text" id="apM" name="Apellido materno" required></div>
+        <div class="field"><label for="correo">Correo electrónico</label><input type="email" id="correo" name="Correo" required></div>
+      </div>
+      <div class="field-row">
+        <div class="field">
+          <label for="tipoIE">Tipo de I.E.</label>
+          <select id="tipoIE" name="Tipo IE" required>
+            <option value="">Seleccionar tipo</option>
+            <option>Privada</option>
+            <option>Pública</option>
+          </select>
+        </div>
+        <div class="field"><label for="ie">Institución educativa</label><input type="text" id="ie" name="Institución" required></div>
+      </div>
+      <div class="field">
+        <label for="grado">Grado</label>
+        <select id="grado" name="Grado" required>
+          <option value="">Seleccionar grado</option>
+          <option>1° de Primaria</option>
+          <option>2° de Primaria</option>
+          <option>3° de Primaria</option>
+          <option>4° de Primaria</option>
+          <option>5° de Primaria</option>
+          <option>6° de Primaria</option>
+          <option>1° de Secundaria</option>
+          <option>2° de Secundaria</option>
+          <option>3° de Secundaria</option>
+          <option>4° de Secundaria</option>
+          <option>5° de Secundaria</option>
+        </select>
+      </div>
+      <button type="submit" class="btn btn-navy" style="width:100%;justify-content:center;">Registrar</button>
+      <div class="form-msg" id="msg-libre"></div>
+    </form>
+  </div>
+</section>
+
+<footer>
+  <a href="#inicio" class="brand" style="justify-content:center;"><img src="assets/logo.jpg" alt="Fractal Colegio y Academia" style="height:44px;"><span class="brand-text">Fractal<b>Matic</b></span></a>
+  <p>Jr. Real 757, Mala — Cañete, Lima</p>
+  <p>direccion@fractal.edu.pe · 940 579 510</p>
+  <div class="social-row">
+    <a href="#" aria-label="Facebook" class="social-ico">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M15 8.5H17V5.5H15C13.067 5.5 11.5 7.067 11.5 9V11.5H9V14.5H11.5V21H14.5V14.5H17L17.5 11.5H14.5V9C14.5 8.72 14.72 8.5 15 8.5Z" fill="currentColor"/></svg>
+    </a>
+    <a href="#" aria-label="Instagram" class="social-ico">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><rect x="3.5" y="3.5" width="17" height="17" rx="5" stroke="currentColor" stroke-width="1.6"/><circle cx="12" cy="12" r="3.6" stroke="currentColor" stroke-width="1.6"/><circle cx="17.2" cy="6.8" r="1" fill="currentColor"/></svg>
+    </a>
+    <a href="#" aria-label="WhatsApp" class="social-ico">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M12 3C7.03 3 3 7.03 3 12C3 13.6 3.42 15.1 4.16 16.4L3 21L7.73 19.87C8.99 20.58 10.45 21 12 21C16.97 21 21 16.97 21 12C21 7.03 16.97 3 12 3Z" stroke="currentColor" stroke-width="1.6"/><path d="M8.5 8.7C8.6 8 9.2 7.6 9.8 7.7C10.1 7.7 10.4 7.9 10.5 8.2L11 9.6C11.1 9.9 11 10.2 10.8 10.4L10.2 11C10.6 12 11.9 13.3 12.9 13.7L13.5 13.1C13.7 12.9 14 12.8 14.3 12.9L15.7 13.4C16 13.5 16.2 13.8 16.2 14.1C16.3 14.7 15.9 15.3 15.2 15.5C13.4 16 10.3 14.6 8.9 13.2C7.9 12.2 8.2 9.9 8.5 8.7Z" fill="currentColor"/></svg>
+    </a>
+  </div>
+  <p class="mono" style="margin-top:10px;letter-spacing:.06em;color:#6B76A8;">#FractalMatic2026</p>
+  <p style="margin-top:14px;color:#5A6494;">© Colegio y Academia Fractal. Todos los derechos reservados.</p>
+</footer>
+
+<script>
+  // mobile nav
+  const navtoggle = document.getElementById('navtoggle');
+  const navlinks = document.getElementById('navlinks');
+  navtoggle.addEventListener('click', () => navlinks.classList.toggle('open'));
+  navlinks.querySelectorAll('a').forEach(a => a.addEventListener('click', () => navlinks.classList.remove('open')));
+
+  // exam tabs
+  document.querySelectorAll('.exam-tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      document.querySelectorAll('.exam-tab').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.exam-panel').forEach(p => p.classList.remove('active'));
+      tab.classList.add('active');
+      document.querySelector(`.exam-panel[data-panel="${tab.dataset.tab}"]`).classList.add('active');
+    });
+  });
+
+  // inscription forms toggle
+  function showForm(which){
+    document.querySelectorAll('.form-wrap').forEach(f => f.classList.remove('active'));
+    document.getElementById('form-' + which).classList.add('active');
+    document.getElementById('form-' + which).scrollIntoView({behavior:'smooth', block:'start'});
+  }
+
+  // form submission — replace FORMSPREE_ENDPOINT with your own (see INSTRUCCIONES.md)
+  const FORMSPREE_ENDPOINT = "https://formspree.io/f/TU_ID_AQUI";
+
+  async function handleSubmit(e, msgId){
+    e.preventDefault();
+    const form = e.target;
+    const msg = document.getElementById(msgId);
+    if(FORMSPREE_ENDPOINT.includes("TU_ID_AQUI")){
+      msg.textContent = "Formulario aún no conectado. Revisa INSTRUCCIONES.md para activar el envío real.";
+      msg.className = "form-msg err";
+      return;
+    }
+    const data = new FormData(form);
+    try{
+      const res = await fetch(FORMSPREE_ENDPOINT, {
+        method: "POST",
+        body: data,
+        headers: { 'Accept': 'application/json' }
+      });
+      if(res.ok){
+        msg.textContent = "¡Listo! Tu inscripción fue enviada correctamente.";
+        msg.className = "form-msg ok";
+        form.reset();
+      } else {
+        msg.textContent = "No se pudo enviar. Inténtalo nuevamente en unos minutos.";
+        msg.className = "form-msg err";
+      }
+    }catch(err){
+      msg.textContent = "Error de conexión. Verifica tu internet e inténtalo de nuevo.";
+      msg.className = "form-msg err";
+    }
+  }
+
+  document.getElementById('delegacionForm').addEventListener('submit', e => handleSubmit(e, 'msg-delegacion'));
+  document.getElementById('libreForm').addEventListener('submit', e => handleSubmit(e, 'msg-libre'));
+</script>
+
+</body>
+</html>
