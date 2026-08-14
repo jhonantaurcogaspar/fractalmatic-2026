@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>FractalMatic 2026 — 1° Concurso Nacional de Matemática</title>
 <meta name="description" content="FractalMatic 2026, 1° Concurso Nacional de Matemática. Colegio y Academia Fractal, Mala, Cañete. S/5,000 en premios para colegios públicos y privados. Bases, temario e inscripciones.">
-<link rel="icon" href="assets/logo.jpeg">
+<link rel="icon" href="assets/logo.jpg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,800;0,900;1,700&family=Poppins:wght@600;700;800&family=Inter:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
@@ -281,7 +281,7 @@
 
 <header>
   <nav class="nav">
-    <a href="#inicio" class="brand"><img src="assets/logo.jpeg" alt="Fractal Colegio y Academia"><span class="brand-text">Fractal<b>Matic</b></span></a>
+    <a href="#inicio" class="brand"><img src="assets/logo.jpg" alt="Fractal Colegio y Academia"><span class="brand-text">Fractal<b>Matic</b></span></a>
     <ul class="navlinks" id="navlinks">
       <li><a href="#inicio">Inicio</a></li>
       <li><a href="#bases">Bases</a></li>
@@ -494,7 +494,7 @@
 </section>
 
 <footer>
-  <a href="#inicio" class="brand" style="justify-content:center;"><img src="assets/logo.jpeg" alt="Fractal Colegio y Academia" style="height:44px;"><span class="brand-text">Fractal<b>Matic</b></span></a>
+  <a href="#inicio" class="brand" style="justify-content:center;"><img src="assets/logo.jpg" alt="Fractal Colegio y Academia" style="height:44px;"><span class="brand-text">Fractal<b>Matic</b></span></a>
   <p>Jr. Real 757, Mala — Cañete, Lima</p>
   <p>direccion@fractal.edu.pe · 940 579 510</p>
   <div class="social-row">
@@ -536,41 +536,70 @@
     document.getElementById('form-' + which).scrollIntoView({behavior:'smooth', block:'start'});
   }
 
-  // form submission — replace FORMSPREE_ENDPOINT with your own (see INSTRUCCIONES.md)
-  const FORMSPREE_ENDPOINT = "https://formspree.io/f/TU_ID_AQUI";
+  // ====== CONEXIÓN CON GOOGLE FORMS (gratis, ilimitado, guarda en Sheets) ======
+  // Sigue INSTRUCCIONES.md para crear tus 2 Google Forms y obtener estos datos.
+  // Reemplaza cada "FORM_ID_AQUI" y cada "entry.XXXXXXXXX" con los tuyos.
+  const GOOGLE_FORMS = {
+    delegacion: {
+      actionUrl: "https://docs.google.com/forms/d/e/FORM_ID_DELEGACION_AQUI/formResponse",
+      fields: {
+        cod:  "entry.XXXXXXXXX",   // Código modular
+        pass: "entry.XXXXXXXXX"    // Contraseña
+      }
+    },
+    libre: {
+      actionUrl: "https://docs.google.com/forms/d/e/FORM_ID_LIBRE_AQUI/formResponse",
+      fields: {
+        dni:    "entry.XXXXXXXXX", // DNI / CE
+        cel:    "entry.XXXXXXXXX", // Celular
+        nombre: "entry.XXXXXXXXX", // Nombre
+        apP:    "entry.XXXXXXXXX", // Apellido paterno
+        apM:    "entry.XXXXXXXXX", // Apellido materno
+        correo: "entry.XXXXXXXXX", // Correo
+        tipoIE: "entry.XXXXXXXXX", // Tipo de I.E.
+        ie:     "entry.XXXXXXXXX", // Institución
+        grado:  "entry.XXXXXXXXX"  // Grado
+      }
+    }
+  };
 
-  async function handleSubmit(e, msgId){
+  async function handleSubmit(e, msgId, formKey){
     e.preventDefault();
     const form = e.target;
     const msg = document.getElementById(msgId);
-    if(FORMSPREE_ENDPOINT.includes("TU_ID_AQUI")){
-      msg.textContent = "Formulario aún no conectado. Revisa INSTRUCCIONES.md para activar el envío real.";
+    const config = GOOGLE_FORMS[formKey];
+
+    if(config.actionUrl.includes("FORM_ID") || Object.values(config.fields).some(v => v.includes("XXXXXXXXX"))){
+      msg.textContent = "Formulario aún no conectado. Revisa INSTRUCCIONES.md para conectar tu Google Form.";
       msg.className = "form-msg err";
       return;
     }
-    const data = new FormData(form);
+
+    const gData = new FormData();
+    Object.entries(config.fields).forEach(([fieldId, entryName]) => {
+      const el = document.getElementById(fieldId);
+      if(el) gData.append(entryName, el.value);
+    });
+
     try{
-      const res = await fetch(FORMSPREE_ENDPOINT, {
+      await fetch(config.actionUrl, {
         method: "POST",
-        body: data,
-        headers: { 'Accept': 'application/json' }
+        mode: "no-cors",       // Google Forms no permite leer la respuesta, pero sí recibe el envío
+        body: gData
       });
-      if(res.ok){
-        msg.textContent = "¡Listo! Tu inscripción fue enviada correctamente.";
-        msg.className = "form-msg ok";
-        form.reset();
-      } else {
-        msg.textContent = "No se pudo enviar. Inténtalo nuevamente en unos minutos.";
-        msg.className = "form-msg err";
-      }
+      // Con mode:no-cors no podemos confirmar el código de estado, así que asumimos éxito
+      // si el navegador no lanzó un error de red.
+      msg.textContent = "¡Listo! Tu inscripción fue enviada correctamente.";
+      msg.className = "form-msg ok";
+      form.reset();
     }catch(err){
       msg.textContent = "Error de conexión. Verifica tu internet e inténtalo de nuevo.";
       msg.className = "form-msg err";
     }
   }
 
-  document.getElementById('delegacionForm').addEventListener('submit', e => handleSubmit(e, 'msg-delegacion'));
-  document.getElementById('libreForm').addEventListener('submit', e => handleSubmit(e, 'msg-libre'));
+  document.getElementById('delegacionForm').addEventListener('submit', e => handleSubmit(e, 'msg-delegacion', 'delegacion'));
+  document.getElementById('libreForm').addEventListener('submit', e => handleSubmit(e, 'msg-libre', 'libre'));
 </script>
 
 </body>
