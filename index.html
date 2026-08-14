@@ -342,7 +342,6 @@
     <a href="#inicio" class="brand"><img src="assets/logo.jpeg" alt="Fractal Colegio y Academia"><span class="brand-text">Fractal<b>Matic</b></span></a>
     <ul class="navlinks" id="navlinks">
       <li><a href="#inicio">Inicio</a></li>
-      <!-- CORRECCIÓN 1: Se unió Bases y Temario para evitar saltos raros y desajustes de layout -->
       <li><a href="#bases">Bases y Temario</a></li>
       <li><a href="#examenes">Exámenes</a></li>
       <li><a href="#tutoriales">Tutorial</a></li>
@@ -408,11 +407,9 @@
       <div>
         <h3>Bases del concurso</h3>
         <p>Reglamento, fecha del examen (22 de agosto), premios y condiciones de inscripción.</p>
-        <!-- CORRECCIÓN 2: Se agregó target="_blank" para abrir el Drive en una pestaña nueva -->
         <a href="https://drive.google.com/file/d/COLOCA_AQUI_EL_ID_DE_BASES/view?usp=sharing" target="_blank" class="btn btn-navy">Descargar bases</a>
       </div>
     </div>
-    <!-- CORRECCIÓN 3: Se quitó el id="temario" del div para evitar que el navegador rompa la cuadrícula al hacer clic en el menú -->
     <div class="card doc-card">
       <div class="doc-icon pdf" style="background:var(--teal);">PDF</div>
       <div>
@@ -435,9 +432,6 @@
       <button class="exam-tab active" data-tab="primaria">Primaria</button>
       <button class="exam-tab" data-tab="secundaria">Secundaria</button>
     </div>
-
-    <!-- CORRECCIÓN 4: Todos los href de exámenes y resultados ahora apuntan a Google Drive y usan target="_blank" -->
-    <!-- Simplemente reemplaza el enlace de Drive por el tuyo en cada href -->
 
     <div class="exam-panel active" data-panel="primaria">
       <div class="exam-grid">
@@ -604,7 +598,7 @@
   <p style="margin-top:14px;color:#5A6494;">© Colegio y Academia Fractal. Todos los derechos reservados.</p>
 </footer>
 
-<!-- MODAL PARA PDF (Se mantiene para posibles archivos locales a futuro, aunque ahora usemos Drive) -->
+<!-- MODAL PARA PDF VISOR INTEGRADO -->
 <div class="pdf-modal" id="pdfModal" aria-hidden="true">
   <div class="pdf-modal-card">
     <div class="pdf-modal-head">
@@ -613,7 +607,7 @@
         <span class="pdf-modal-title" id="pdfModalTitle">Cargando...</span>
       </div>
       <div class="pdf-modal-actions">
-        <a href="#" id="pdfDownload" class="pdf-modal-btn" download style="display:none;background:var(--teal);">Descargar</a>
+        <a href="#" id="pdfDownload" class="pdf-modal-btn" download target="_blank" style="display:none;background:var(--teal);">Descargar / Abrir</a>
         <button id="pdfClose" class="pdf-modal-btn pdf-modal-close">Cerrar</button>
       </div>
     </div>
@@ -628,13 +622,13 @@
 </div>
 
 <script>
-  // mobile nav
+  // Navigation menu
   const navtoggle = document.getElementById('navtoggle');
   const navlinks = document.getElementById('navlinks');
   navtoggle.addEventListener('click', () => navlinks.classList.toggle('open'));
   navlinks.querySelectorAll('a').forEach(a => a.addEventListener('click', () => navlinks.classList.remove('open')));
 
-  // exam tabs
+  // Exam tabs
   document.querySelectorAll('.exam-tab').forEach(tab => {
     tab.addEventListener('click', () => {
       document.querySelectorAll('.exam-tab').forEach(t => t.classList.remove('active'));
@@ -644,7 +638,7 @@
     });
   });
 
-  // ====== DISPONIBILIDAD + VISOR DE PDF ======
+  // ====== VISOR DE PDF Y DOCUMENTOS EN DRIVE ======
   const pdfModal = document.getElementById('pdfModal');
   const pdfViewer = document.getElementById('pdfViewer');
   const pdfDownload = document.getElementById('pdfDownload');
@@ -680,22 +674,21 @@
     pdfUnavailable.style.display = 'none';
     document.body.style.overflow = 'hidden';
 
-    if(window.location.protocol !== 'file:'){
-      fetch(url, {method:'HEAD', cache:'no-store'})
-        .then(response => {
-          if(!response.ok) throw new Error('PDF no disponible');
-          pdfViewer.src = url;
-          pdfViewer.style.display = 'block';
-          pdfDownload.href = url;
-          pdfDownload.style.display = 'inline-flex';
-        })
-        .catch(() => showUnavailable(type));
-    }else{
-      pdfViewer.src = url;
-      pdfViewer.style.display = 'block';
-      pdfDownload.href = url;
-      pdfDownload.style.display = 'inline-flex';
+    // Manejo inteligente de enlaces de Google Drive o IDs por reemplazar
+    if(url.includes('COLOCA_AQUI_EL_ID')) {
+      showUnavailable(type);
+      return;
     }
+
+    let embedUrl = url;
+    if (url.includes('drive.google.com')) {
+      embedUrl = url.replace(/\/view.*$/, '/preview').replace(/\/edit.*$/, '/preview');
+    }
+
+    pdfViewer.src = embedUrl;
+    pdfViewer.style.display = 'block';
+    pdfDownload.href = url;
+    pdfDownload.style.display = 'inline-flex';
   }
 
   function closePdfModal(){
@@ -706,18 +699,12 @@
     document.body.style.overflow = '';
   }
 
-  // CORRECCIÓN 5: Modificamos el Javascript para que los enlaces de Google Drive se abran directamente y eviten errores CORS o de iframes en Github Pages
+  // Event listener para links con visualización en modal original
   document.querySelectorAll('.pdf-link').forEach(link => {
     link.addEventListener('click', e => {
       const url = link.getAttribute('href');
       
-      // Si el enlace es de Google Drive o de internet (inicia con http)
-      // dejamos que funcione el link normalmente (se abrirá en nueva pestaña gracias a target="_blank")
-      if(url.startsWith('http')){
-        return; 
-      }
-      
-      // Si usas un enlace local en el futuro, activará el modal
+      // Si el enlace contiene el ID placeholder o se quiere mostrar dentro del modal original
       e.preventDefault();
       const type = link.classList.contains('result-item') ? 'RESULTADOS' : 'EXAMEN';
       openPdfModal(link.dataset.title, url, type);
@@ -733,7 +720,7 @@
     if(e.key === 'Escape' && pdfModal.classList.contains('active')) closePdfModal();
   });
 
-  // inscription forms toggle
+  // Toggle para mostrar/ocultar formularios
   function showForm(which){
     document.querySelectorAll('.form-wrap').forEach(f => f.classList.remove('active'));
     document.getElementById('form-' + which).classList.add('active');
@@ -772,7 +759,7 @@
     const config = GOOGLE_FORMS[formKey];
 
     if(config.actionUrl.includes("FORM_ID") || Object.values(config.fields).some(v => v.includes("XXXXXXXXX"))){
-      msg.textContent = "Formulario aún no conectado. Revisa INSTRUCCIONES.md para conectar tu Google Form.";
+      msg.textContent = "Formulario aún no conectado. Reemplaza los 'entry.XXXXXXXXX' con tus IDs de Google Forms.";
       msg.className = "form-msg err";
       return;
     }
@@ -789,7 +776,6 @@
         mode: "no-cors",       
         body: gData
       });
-      // Los mensajes "sin alerta" de éxito se muestran aquí:
       msg.textContent = "¡Listo! Tu inscripción fue enviada correctamente.";
       msg.className = "form-msg ok";
       form.reset();
