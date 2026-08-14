@@ -207,6 +207,56 @@
     color:var(--ink-soft);
   }
   .empty-state strong{color:var(--navy);display:block;margin-bottom:6px;font-family:'Poppins',sans-serif;}
+  .exam-results{
+    margin-top:32px;padding-top:28px;border-top:1px solid var(--line);
+  }
+  .exam-results h3{
+    color:var(--navy);text-align:center;margin:0 0 18px;font-size:1.15rem;
+  }
+  .exam-item small{display:block;margin-top:5px;color:var(--ink-soft);font-weight:500;}
+  .result-item{border-color:rgba(245,179,1,.45);}
+
+  /* Visor profesional de PDF */
+  .pdf-modal{
+    position:fixed;inset:0;z-index:1000;display:none;align-items:center;justify-content:center;
+    padding:24px;background:rgba(11,19,56,.80);backdrop-filter:blur(6px);
+  }
+  .pdf-modal.active{display:flex;}
+  .pdf-modal-card{
+    width:min(1120px,96vw);height:min(90vh,920px);background:#fff;border-radius:18px;
+    overflow:hidden;box-shadow:0 24px 70px rgba(0,0,0,.38);display:flex;flex-direction:column;
+  }
+  .pdf-modal-head{
+    display:flex;align-items:center;justify-content:space-between;gap:16px;
+    padding:13px 16px;border-bottom:1px solid var(--line);background:#fff;
+  }
+  .pdf-modal-title-wrap{display:flex;align-items:center;gap:10px;min-width:0;}
+  .pdf-modal-badge{
+    flex:none;padding:5px 8px;border-radius:7px;background:var(--navy);color:#fff;
+    font-family:'Space Mono',monospace;font-size:.62rem;font-weight:700;letter-spacing:.04em;
+  }
+  .pdf-modal-title{
+    font-family:'Poppins',sans-serif;font-weight:700;color:var(--navy);
+    white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  }
+  .pdf-modal-actions{display:flex;gap:8px;align-items:center;flex:none;}
+  .pdf-modal-btn{
+    border:0;border-radius:9px;padding:9px 13px;background:var(--navy);color:#fff;
+    font-weight:700;cursor:pointer;text-decoration:none;font-family:'Inter',sans-serif;
+  }
+  .pdf-modal-close{background:var(--coral);}
+  .pdf-viewer{width:100%;height:100%;border:0;background:#eef1f7;display:none;}
+  .pdf-unavailable{
+    flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;
+    text-align:center;padding:42px 24px;background:var(--cloud);
+  }
+  .pdf-status-icon{
+    width:76px;height:76px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+    background:#fff;border:1px solid var(--line);font-size:2rem;margin-bottom:18px;
+    box-shadow:0 8px 25px rgba(20,33,61,.07);
+  }
+  .pdf-unavailable h3{margin:0 0 9px;color:var(--navy);font-size:1.35rem;}
+  .pdf-unavailable p{max-width:520px;margin:0 0 22px;color:var(--ink-soft);line-height:1.6;}
 
   /* tutoriales */
   .video-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;max-width:var(--max);margin:0 auto;}
@@ -263,6 +313,14 @@
   .social-ico:hover{background:var(--gold);color:var(--navy-dark);}
 
   @media (max-width:820px){
+    .pdf-modal{padding:10px;}
+    .pdf-modal-card{width:100%;height:92vh;border-radius:12px;}
+    .pdf-modal-head{align-items:flex-start;padding:11px;}
+    .pdf-modal-title{font-size:.82rem;white-space:normal;}
+    .pdf-modal-badge{display:none;}
+    .pdf-modal-actions{gap:5px;}
+    .pdf-modal-btn{padding:8px 9px;font-size:.76rem;}
+    .pdf-unavailable{padding:30px 18px;}
     .navlinks{
       position:fixed;top:70px;left:0;right:0;background:#fff;flex-direction:column;
       padding:20px 24px;gap:0;border-bottom:1px solid var(--line);
@@ -284,8 +342,8 @@
     <a href="#inicio" class="brand"><img src="assets/logo.jpeg" alt="Fractal Colegio y Academia"><span class="brand-text">Fractal<b>Matic</b></span></a>
     <ul class="navlinks" id="navlinks">
       <li><a href="#inicio">Inicio</a></li>
-      <li><a href="#bases">Bases</a></li>
-      <li><a href="#temario">Temario</a></li>
+      <!-- CORRECCIÓN 1: Se unió Bases y Temario para evitar saltos raros y desajustes de layout -->
+      <li><a href="#bases">Bases y Temario</a></li>
       <li><a href="#examenes">Exámenes</a></li>
       <li><a href="#tutoriales">Tutorial</a></li>
       <li><a href="#inscripciones">Inscripciones</a></li>
@@ -350,15 +408,17 @@
       <div>
         <h3>Bases del concurso</h3>
         <p>Reglamento, fecha del examen (22 de agosto), premios y condiciones de inscripción.</p>
-        <a href="bases/BASES_FRACTALMATIC_2026.pdf" class="btn btn-navy" id="temario-anchor-fix">Descargar bases</a>
+        <!-- CORRECCIÓN 2: Se agregó target="_blank" para abrir el Drive en una pestaña nueva -->
+        <a href="https://drive.google.com/file/d/COLOCA_AQUI_EL_ID_DE_BASES/view?usp=sharing" target="_blank" class="btn btn-navy">Descargar bases</a>
       </div>
     </div>
-    <div class="card doc-card" id="temario">
+    <!-- CORRECCIÓN 3: Se quitó el id="temario" del div para evitar que el navegador rompa la cuadrícula al hacer clic en el menú -->
+    <div class="card doc-card">
       <div class="doc-icon pdf" style="background:var(--teal);">PDF</div>
       <div>
         <h3>Temario oficial</h3>
         <p>Contenidos y capacidades evaluadas por cada nivel y grado.</p>
-        <a href="bases/TEMARIO_FRACTALMATIC_2026.pdf" class="btn btn-navy">Descargar temario</a>
+        <a href="https://drive.google.com/file/d/COLOCA_AQUI_EL_ID_DE_TEMARIO/view?usp=sharing" target="_blank" class="btn btn-navy">Descargar temario</a>
       </div>
     </div>
   </div>
@@ -376,16 +436,48 @@
       <button class="exam-tab" data-tab="secundaria">Secundaria</button>
     </div>
 
+    <!-- CORRECCIÓN 4: Todos los href de exámenes y resultados ahora apuntan a Google Drive y usan target="_blank" -->
+    <!-- Simplemente reemplaza el enlace de Drive por el tuyo en cada href -->
+
     <div class="exam-panel active" data-panel="primaria">
-      <div class="empty-state">
-        <strong>Aún no hay exámenes publicados</strong>
-        Los exámenes de 1° a 6° de Primaria estarán disponibles aquí después de FractalMatic 2026.
+      <div class="exam-grid">
+        <a class="exam-item pdf-link" href="https://drive.google.com/file/d/COLOCA_AQUI_EL_ID/view?usp=sharing" target="_blank" data-title="1° Primaria — Examen">1° Primaria<br><small>📄 Examen</small></a>
+        <a class="exam-item pdf-link" href="https://drive.google.com/file/d/COLOCA_AQUI_EL_ID/view?usp=sharing" target="_blank" data-title="2° Primaria — Examen">2° Primaria<br><small>📄 Examen</small></a>
+        <a class="exam-item pdf-link" href="https://drive.google.com/file/d/COLOCA_AQUI_EL_ID/view?usp=sharing" target="_blank" data-title="3° Primaria — Examen">3° Primaria<br><small>📄 Examen</small></a>
+        <a class="exam-item pdf-link" href="https://drive.google.com/file/d/COLOCA_AQUI_EL_ID/view?usp=sharing" target="_blank" data-title="4° Primaria — Examen">4° Primaria<br><small>📄 Examen</small></a>
+        <a class="exam-item pdf-link" href="https://drive.google.com/file/d/COLOCA_AQUI_EL_ID/view?usp=sharing" target="_blank" data-title="5° Primaria — Examen">5° Primaria<br><small>📄 Examen</small></a>
+        <a class="exam-item pdf-link" href="https://drive.google.com/file/d/COLOCA_AQUI_EL_ID/view?usp=sharing" target="_blank" data-title="6° Primaria — Examen">6° Primaria<br><small>📄 Examen</small></a>
+      </div>
+      <div class="exam-results">
+        <h3>🏆 Resultados — Primaria</h3>
+        <div class="exam-grid">
+          <a class="exam-item result-item pdf-link" href="https://drive.google.com/file/d/COLOCA_AQUI_EL_ID/view?usp=sharing" target="_blank" data-title="1° Primaria — Resultados">1° Primaria<br><small>🏆 Resultados</small></a>
+          <a class="exam-item result-item pdf-link" href="https://drive.google.com/file/d/COLOCA_AQUI_EL_ID/view?usp=sharing" target="_blank" data-title="2° Primaria — Resultados">2° Primaria<br><small>🏆 Resultados</small></a>
+          <a class="exam-item result-item pdf-link" href="https://drive.google.com/file/d/COLOCA_AQUI_EL_ID/view?usp=sharing" target="_blank" data-title="3° Primaria — Resultados">3° Primaria<br><small>🏆 Resultados</small></a>
+          <a class="exam-item result-item pdf-link" href="https://drive.google.com/file/d/COLOCA_AQUI_EL_ID/view?usp=sharing" target="_blank" data-title="4° Primaria — Resultados">4° Primaria<br><small>🏆 Resultados</small></a>
+          <a class="exam-item result-item pdf-link" href="https://drive.google.com/file/d/COLOCA_AQUI_EL_ID/view?usp=sharing" target="_blank" data-title="5° Primaria — Resultados">5° Primaria<br><small>🏆 Resultados</small></a>
+          <a class="exam-item result-item pdf-link" href="https://drive.google.com/file/d/COLOCA_AQUI_EL_ID/view?usp=sharing" target="_blank" data-title="6° Primaria — Resultados">6° Primaria<br><small>🏆 Resultados</small></a>
+        </div>
       </div>
     </div>
+
     <div class="exam-panel" data-panel="secundaria">
-      <div class="empty-state">
-        <strong>Aún no hay exámenes publicados</strong>
-        Los exámenes de 1° a 5° de Secundaria estarán disponibles aquí después de FractalMatic 2026.
+      <div class="exam-grid">
+        <a class="exam-item pdf-link" href="https://drive.google.com/file/d/COLOCA_AQUI_EL_ID/view?usp=sharing" target="_blank" data-title="1° Secundaria — Examen">1° Secundaria<br><small>📄 Examen</small></a>
+        <a class="exam-item pdf-link" href="https://drive.google.com/file/d/COLOCA_AQUI_EL_ID/view?usp=sharing" target="_blank" data-title="2° Secundaria — Examen">2° Secundaria<br><small>📄 Examen</small></a>
+        <a class="exam-item pdf-link" href="https://drive.google.com/file/d/COLOCA_AQUI_EL_ID/view?usp=sharing" target="_blank" data-title="3° Secundaria — Examen">3° Secundaria<br><small>📄 Examen</small></a>
+        <a class="exam-item pdf-link" href="https://drive.google.com/file/d/COLOCA_AQUI_EL_ID/view?usp=sharing" target="_blank" data-title="4° Secundaria — Examen">4° Secundaria<br><small>📄 Examen</small></a>
+        <a class="exam-item pdf-link" href="https://drive.google.com/file/d/COLOCA_AQUI_EL_ID/view?usp=sharing" target="_blank" data-title="5° Secundaria — Examen">5° Secundaria<br><small>📄 Examen</small></a>
+      </div>
+      <div class="exam-results">
+        <h3>🏆 Resultados — Secundaria</h3>
+        <div class="exam-grid">
+          <a class="exam-item result-item pdf-link" href="https://drive.google.com/file/d/COLOCA_AQUI_EL_ID/view?usp=sharing" target="_blank" data-title="1° Secundaria — Resultados">1° Secundaria<br><small>🏆 Resultados</small></a>
+          <a class="exam-item result-item pdf-link" href="https://drive.google.com/file/d/COLOCA_AQUI_EL_ID/view?usp=sharing" target="_blank" data-title="2° Secundaria — Resultados">2° Secundaria<br><small>🏆 Resultados</small></a>
+          <a class="exam-item result-item pdf-link" href="https://drive.google.com/file/d/COLOCA_AQUI_EL_ID/view?usp=sharing" target="_blank" data-title="3° Secundaria — Resultados">3° Secundaria<br><small>🏆 Resultados</small></a>
+          <a class="exam-item result-item pdf-link" href="https://drive.google.com/file/d/COLOCA_AQUI_EL_ID/view?usp=sharing" target="_blank" data-title="4° Secundaria — Resultados">4° Secundaria<br><small>🏆 Resultados</small></a>
+          <a class="exam-item result-item pdf-link" href="https://drive.google.com/file/d/COLOCA_AQUI_EL_ID/view?usp=sharing" target="_blank" data-title="5° Secundaria — Resultados">5° Secundaria<br><small>🏆 Resultados</small></a>
+        </div>
       </div>
     </div>
   </div>
@@ -512,6 +604,29 @@
   <p style="margin-top:14px;color:#5A6494;">© Colegio y Academia Fractal. Todos los derechos reservados.</p>
 </footer>
 
+<!-- MODAL PARA PDF (Se mantiene para posibles archivos locales a futuro, aunque ahora usemos Drive) -->
+<div class="pdf-modal" id="pdfModal" aria-hidden="true">
+  <div class="pdf-modal-card">
+    <div class="pdf-modal-head">
+      <div class="pdf-modal-title-wrap">
+        <span class="pdf-modal-badge" id="pdfModalBadge">DOCUMENTO</span>
+        <span class="pdf-modal-title" id="pdfModalTitle">Cargando...</span>
+      </div>
+      <div class="pdf-modal-actions">
+        <a href="#" id="pdfDownload" class="pdf-modal-btn" download style="display:none;background:var(--teal);">Descargar</a>
+        <button id="pdfClose" class="pdf-modal-btn pdf-modal-close">Cerrar</button>
+      </div>
+    </div>
+    <iframe class="pdf-viewer" id="pdfViewer" title="Visor de PDF"></iframe>
+    <div class="pdf-unavailable" id="pdfUnavailable">
+      <div class="pdf-status-icon">📄</div>
+      <h3 id="pdfUnavailableTitle">Documento no disponible</h3>
+      <p id="pdfUnavailableText">El documento solicitado no se encuentra disponible en este momento.</p>
+      <button id="pdfUnavailableClose" class="btn btn-navy">Volver a la página</button>
+    </div>
+  </div>
+</div>
+
 <script>
   // mobile nav
   const navtoggle = document.getElementById('navtoggle');
@@ -529,6 +644,95 @@
     });
   });
 
+  // ====== DISPONIBILIDAD + VISOR DE PDF ======
+  const pdfModal = document.getElementById('pdfModal');
+  const pdfViewer = document.getElementById('pdfViewer');
+  const pdfDownload = document.getElementById('pdfDownload');
+  const pdfModalTitle = document.getElementById('pdfModalTitle');
+  const pdfModalBadge = document.getElementById('pdfModalBadge');
+  const pdfUnavailable = document.getElementById('pdfUnavailable');
+  const pdfUnavailableTitle = document.getElementById('pdfUnavailableTitle');
+  const pdfUnavailableText = document.getElementById('pdfUnavailableText');
+  const pdfUnavailableClose = document.getElementById('pdfUnavailableClose');
+  const pdfClose = document.getElementById('pdfClose');
+
+  function showUnavailable(type){
+    pdfViewer.style.display = 'none';
+    pdfViewer.src = '';
+    pdfDownload.style.display = 'none';
+    pdfUnavailable.style.display = 'flex';
+    pdfUnavailableTitle.textContent = type === 'RESULTADOS'
+      ? 'Resultados aún no disponibles'
+      : 'Examen aún no disponible';
+    pdfUnavailableText.textContent = type === 'RESULTADOS'
+      ? 'Los resultados oficiales todavía no han sido publicados. Cuando estén disponibles podrás visualizarlos y descargarlos desde esta sección.'
+      : 'Este examen todavía no ha sido publicado. Cuando esté disponible podrás visualizarlo y descargarlo desde esta sección.';
+  }
+
+  function openPdfModal(title, url, type){
+    pdfModal.classList.add('active');
+    pdfModal.setAttribute('aria-hidden', 'false');
+    pdfModalTitle.textContent = title || 'Documento PDF';
+    pdfModalBadge.textContent = type || 'DOCUMENTO';
+    pdfViewer.style.display = 'none';
+    pdfViewer.src = '';
+    pdfDownload.style.display = 'none';
+    pdfUnavailable.style.display = 'none';
+    document.body.style.overflow = 'hidden';
+
+    if(window.location.protocol !== 'file:'){
+      fetch(url, {method:'HEAD', cache:'no-store'})
+        .then(response => {
+          if(!response.ok) throw new Error('PDF no disponible');
+          pdfViewer.src = url;
+          pdfViewer.style.display = 'block';
+          pdfDownload.href = url;
+          pdfDownload.style.display = 'inline-flex';
+        })
+        .catch(() => showUnavailable(type));
+    }else{
+      pdfViewer.src = url;
+      pdfViewer.style.display = 'block';
+      pdfDownload.href = url;
+      pdfDownload.style.display = 'inline-flex';
+    }
+  }
+
+  function closePdfModal(){
+    pdfModal.classList.remove('active');
+    pdfModal.setAttribute('aria-hidden', 'true');
+    pdfViewer.src = '';
+    pdfDownload.href = '#';
+    document.body.style.overflow = '';
+  }
+
+  // CORRECCIÓN 5: Modificamos el Javascript para que los enlaces de Google Drive se abran directamente y eviten errores CORS o de iframes en Github Pages
+  document.querySelectorAll('.pdf-link').forEach(link => {
+    link.addEventListener('click', e => {
+      const url = link.getAttribute('href');
+      
+      // Si el enlace es de Google Drive o de internet (inicia con http)
+      // dejamos que funcione el link normalmente (se abrirá en nueva pestaña gracias a target="_blank")
+      if(url.startsWith('http')){
+        return; 
+      }
+      
+      // Si usas un enlace local en el futuro, activará el modal
+      e.preventDefault();
+      const type = link.classList.contains('result-item') ? 'RESULTADOS' : 'EXAMEN';
+      openPdfModal(link.dataset.title, url, type);
+    });
+  });
+
+  pdfClose.addEventListener('click', closePdfModal);
+  pdfUnavailableClose.addEventListener('click', closePdfModal);
+  pdfModal.addEventListener('click', e => {
+    if(e.target === pdfModal) closePdfModal();
+  });
+  document.addEventListener('keydown', e => {
+    if(e.key === 'Escape' && pdfModal.classList.contains('active')) closePdfModal();
+  });
+
   // inscription forms toggle
   function showForm(which){
     document.querySelectorAll('.form-wrap').forEach(f => f.classList.remove('active'));
@@ -536,29 +740,27 @@
     document.getElementById('form-' + which).scrollIntoView({behavior:'smooth', block:'start'});
   }
 
-  // ====== CONEXIÓN CON GOOGLE FORMS (gratis, ilimitado, guarda en Sheets) ======
-  // Sigue INSTRUCCIONES.md para crear tus 2 Google Forms y obtener estos datos.
-  // Reemplaza cada "FORM_ID_AQUI" y cada "entry.XXXXXXXXX" con los tuyos.
+  // ====== CONEXIÓN CON GOOGLE FORMS ======
   const GOOGLE_FORMS = {
     delegacion: {
       actionUrl: "https://docs.google.com/forms/d/e/FORM_ID_DELEGACION_AQUI/formResponse",
       fields: {
-        cod:  "entry.XXXXXXXXX",   // Código modular
-        pass: "entry.XXXXXXXXX"    // Contraseña
+        cod:  "entry.XXXXXXXXX",   
+        pass: "entry.XXXXXXXXX"    
       }
     },
     libre: {
       actionUrl: "https://docs.google.com/forms/d/e/FORM_ID_LIBRE_AQUI/formResponse",
       fields: {
-        dni:    "entry.XXXXXXXXX", // DNI / CE
-        cel:    "entry.XXXXXXXXX", // Celular
-        nombre: "entry.XXXXXXXXX", // Nombre
-        apP:    "entry.XXXXXXXXX", // Apellido paterno
-        apM:    "entry.XXXXXXXXX", // Apellido materno
-        correo: "entry.XXXXXXXXX", // Correo
-        tipoIE: "entry.XXXXXXXXX", // Tipo de I.E.
-        ie:     "entry.XXXXXXXXX", // Institución
-        grado:  "entry.XXXXXXXXX"  // Grado
+        dni:    "entry.XXXXXXXXX", 
+        cel:    "entry.XXXXXXXXX", 
+        nombre: "entry.XXXXXXXXX", 
+        apP:    "entry.XXXXXXXXX", 
+        apM:    "entry.XXXXXXXXX", 
+        correo: "entry.XXXXXXXXX", 
+        tipoIE: "entry.XXXXXXXXX", 
+        ie:     "entry.XXXXXXXXX", 
+        grado:  "entry.XXXXXXXXX"  
       }
     }
   };
@@ -584,11 +786,10 @@
     try{
       await fetch(config.actionUrl, {
         method: "POST",
-        mode: "no-cors",       // Google Forms no permite leer la respuesta, pero sí recibe el envío
+        mode: "no-cors",       
         body: gData
       });
-      // Con mode:no-cors no podemos confirmar el código de estado, así que asumimos éxito
-      // si el navegador no lanzó un error de red.
+      // Los mensajes "sin alerta" de éxito se muestran aquí:
       msg.textContent = "¡Listo! Tu inscripción fue enviada correctamente.";
       msg.className = "form-msg ok";
       form.reset();
